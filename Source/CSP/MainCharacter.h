@@ -17,43 +17,54 @@ public:
 
 	//Camera Boom positioning the camera behind the player
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		class USpringArmComponent* CameraBoom;
 
-	//Follow Camera
+	//follow camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+		class UCameraComponent* FollowCamera;
 
-	//BaseTurnRates to scale turning functions for the camera
+	//Base turn rates to scale turning functions for the camera
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	float BaseTurnRate;
+		float BaseTurnRate;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	float BaseLookUpRate;
+		float BaseLookUpRate;
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Called for both Forward and Backward
+	// called for both forward and backward
 	void MoveForward(float Value);
 
-	//called for both left and right
+	//called for both right and left
 	void MoveRight(float Value);
 
-	//called via input to turn at a given rate
-    // @param rate , this is a normalized rate, i.e. 1.0 means 100% of the desired turn rate
-	void TurnAtRate(float Rate);
-
-	//called via input to turn at a given rate
-    // @param rate , this is a normalized rate, i.e. 1.0 means 100% of the desired Look up/down rate
-	void LookUpRate(float Rate);
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+private:
+
+	/**The max movement speed of the pawn*/
+	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
+		int Speed = 100;
+
+	/**The speed of pawn rotation*/
+	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
+		float YawSpeed = 0.3f;
+
+	//a decal that projects teh cursor location
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn Setup", meta = (AllowPrivateAccess = "true"))
+		UDecalComponent* CursorToWorld;
+
+	/** The velocity of the pawn*/
+	FVector CurrentVelocity;
 };
