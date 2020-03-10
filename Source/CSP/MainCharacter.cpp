@@ -120,3 +120,14 @@ void AMainCharacter::MoveRight(float Value)
 	}
 }
 
+
+//// function for shooting
+//void AMainCharacter::
+//{
+//	// syntax for shoot key pressed:
+//	Shooting.Shootloop();
+//
+//	// syntax for shoot key released:
+//	Shooting.Release();
+//
+//}

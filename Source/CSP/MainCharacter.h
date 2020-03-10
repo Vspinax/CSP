@@ -68,3 +68,29 @@ private:
 	/** The velocity of the pawn*/
 	FVector CurrentVelocity;
 };
+
+//class Shooting{
+//	bool ShootHold = false; //checks if you hold down the shoot button 
+//	float ShootCooldown = 0.2; //minimum time between each bullet
+//	float ShootTimer = 0; //current time on counter
+//
+//	void SpawnBullet() {
+//		//this function should spawn the bullet, but I don't know the syntax 
+//	}
+//
+//	void ShootRelease() {
+//		ShootHold == false;
+//	}
+//
+//	void ShootLoop() {
+//		ShootHold == true;
+//		while (ShootHold == true) {
+//			if (ShootTimer == 0) {
+//				SpawnBullet();
+//				ShootTimer = ShootCooldown;
+//				//insert syntax for waiting "ShootCooldown" seconds (0.2 seconds)
+//				ShootTimer = 0;
+//			}
+//		}
+//	}
+//};
