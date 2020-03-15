@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "MainCharacter.generated.h"
 
+class ABullet;
+
 UCLASS()
 class CSP_API AMainCharacter : public ACharacter
 {
@@ -47,26 +49,58 @@ public:
 	//called for both right and left
 	void MoveRight(float Value);
 
+	void Shoot();
+
+	void StartShooting();
+
+	void StopShooting();
+
+
+
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
 
-	/**The max movement speed of the pawn*/
-	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
-		int Speed = 100;
-
-	/**The speed of pawn rotation*/
-	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
-		float YawSpeed = 0.3f;
-
 	//a decal that projects teh cursor location
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn Setup", meta = (AllowPrivateAccess = "true"))
 		UDecalComponent* CursorToWorld;
 
-	/** The velocity of the pawn*/
-	FVector CurrentVelocity;
+
+	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
+		float ShootSpeed = 0.3f;
+
+	/**The bullet the pawn shoots*/
+	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
+		TSubclassOf<ABullet> BulletBlueprint;
+
+	bool IsShooting;
+
+	float NextShot = -0.1f;
+
+	UFUNCTION()
+		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+		void StartDash();
+
+	UFUNCTION()
+		void StopDash();
+
+	UPROPERTY(EditAnywhere)
+		float DashCooldown;
+
+	UPROPERTY()
+		float DashAvailable;
+
+	UPROPERTY()
+		float DashTimer;
+
+	UPROPERTY()
+		bool IsDashing;
+
+
 };
 
 //class Shooting{
