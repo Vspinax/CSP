@@ -2,8 +2,8 @@
 
 
 #include "Bullet.h"
+#include "Enemy.h"
 #include "Components/SphereComponent.h"
-
 
 // Sets default values
 ABullet::ABullet()
@@ -11,11 +11,12 @@ ABullet::ABullet()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//Collision object and RootObject
-	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("MySphere"));
+	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	RootComponent = RootSphere;
+
 	RootSphere->SetGenerateOverlapEvents(true);
 	RootSphere->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnOverlap);
+
 }
 
 // Called when the game starts or when spawned
@@ -29,17 +30,28 @@ void ABullet::BeginPlay()
 void ABullet::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	FVector NewLocation = GetActorLocation();
-	NewLocation += GetActorForwardVector() * Speed * DeltaTime;
-	SetActorLocation(NewLocation);
 
-	TimeLived += DeltaTime;
-	if (TimeLived > TimeBeforeDestroy)
-	{
-		this->Destroy();
-	}
+    FVector NewLocation = GetActorLocation();
+    NewLocation += GetActorForwardVector() * Speed * DeltaTime;
+    SetActorLocation(NewLocation);
+
+    TimeLived += DeltaTime;
+    if (TimeLived > TimeBeforeDestroyed)
+    {
+        this->Destroy();
+    }
 }
 
-void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+    UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
+    bool bFromSweep, const FHitResult& SweepResult)
 {
+    if (OtherActor->IsA(AEnemy::StaticClass()))
+    {
+        // Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
+        Cast<AEnemy>(OtherActor)->Destroy();
+
+        //Destroy Bullet:
+        Destroy();
+    }
 }

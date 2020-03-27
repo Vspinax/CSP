@@ -3,13 +3,13 @@
 
 #include "MainCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
 #include "Components/Decalcomponent.h"
 #include "Materials/Material.h"
 #include "UObject/ConstructorHelpers.h"
-#include "Bullet.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
 
 // Sets default values
 AMainCharacter::AMainCharacter()
@@ -27,12 +27,13 @@ AMainCharacter::AMainCharacter()
 	//Create Follow Camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-
+	//Attaches the Camera at the end of the boom, and let the boom adjust to match the controller orientation.
+	//FollowCamera->bUsePawnControlRotation = false;
 
 	// Create a decal in the world to show the cursor's location
 	CursorToWorld = CreateDefaultSubobject<UDecalComponent>("CursorToWorld");
 	CursorToWorld->SetupAttachment(RootComponent);
-
+	//Hardcoded path
 	static ConstructorHelpers::FObjectFinder<UMaterial> DecalMaterialAsset(TEXT("Material'/Game/Materials/M_Cursor_Decal.M_Cursor_Decal'"));
 	if (DecalMaterialAsset.Succeeded())
 	{
@@ -45,7 +46,6 @@ AMainCharacter::AMainCharacter()
 	DashAvailable = 0.f;
 	DashTimer = 0.f;
 	IsDashing = false;
-
 }
 
 // Called when the game starts or when spawned
@@ -69,7 +69,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	FHitResult Hit;
 	bool HitResult = false;
 
-	///The Cursor only Notices the world meshes
+	//The Cursor only Notices the world meshes
 	HitResult = GetWorld()->GetFirstPlayerController()->GetHitResultUnderCursorByChannel(UEngineTypes::ConvertToTraceType(ECC_WorldStatic), true, Hit);
 
 	if (HitResult)
@@ -81,10 +81,10 @@ void AMainCharacter::Tick(float DeltaTime)
 		///Set the new direction of the pawn:
 		FVector CursorLocation = Hit.Location;
 		UE_LOG(LogTemp, Warning, TEXT("Hit location %s!"), *Hit.Location.ToString());
-		
 		///Set Z to a little above ground
 		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
 
+	
 		FVector NewDirection = TempLocation - GetActorLocation();
 		NewDirection.Z = 0.f;
 		NewDirection.Normalize();
@@ -113,7 +113,7 @@ void AMainCharacter::Tick(float DeltaTime)
 		DashTimer += DeltaTime;
 		if (DashTimer < 1.f) {
 			GetCharacterMovement()->MaxAcceleration = 100000.f;
-			GetCharacterMovement()->MaxWalkSpeed = 2500.f;		
+			GetCharacterMovement()->MaxWalkSpeed = 2500.f;
 			if (DashTimer > 1.f) {
 				// 2048 and 600 is the default 
 				GetCharacterMovement()->MaxAcceleration = 2048.f;
@@ -170,7 +170,7 @@ void AMainCharacter::Shoot()
 {
 	//GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 150.f,
 	//	GetActorRotation());
-	
+
 	// the number is the offsett of the bullet, the distance from the character where the  bullet will spawn
 
 	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 150.f);
@@ -208,6 +208,7 @@ void AMainCharacter::StopDash()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	DashTimer = 0.f;
 }
+
 
 //// function for shooting
 //void AMainCharacter::

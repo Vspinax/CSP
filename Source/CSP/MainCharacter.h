@@ -56,24 +56,25 @@ public:
 	void StopShooting();
 
 
-
-
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
 
+	///** Max Movementspeed of the Character*/
+	//UPROPERTY(EditAnywhere, Category = "Pawn Setup")
+	//	int Speed = 100;
+
 	//a decal that projects teh cursor location
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Pawn Setup", meta = (AllowPrivateAccess = "true"))
 		UDecalComponent* CursorToWorld;
 
+	float ShootSpeed = 0.3f;
 
-	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
-		float ShootSpeed = 0.3f;
 
 	/**The bullet the pawn shoots*/
 	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
-		TSubclassOf<ABullet> BulletBlueprint;
+	TSubclassOf<ABullet> BulletBlueprint;
 
 	bool IsShooting;
 
@@ -99,7 +100,6 @@ private:
 
 	UPROPERTY()
 		bool IsDashing;
-
 
 };
 

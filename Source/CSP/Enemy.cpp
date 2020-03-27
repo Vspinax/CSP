@@ -1,0 +1,60 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "Enemy.h"
+#include "MainCharacter.h"
+#include "Components/BoxComponent.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
+#include "Components/StaticMeshComponent.h"
+
+
+
+// Sets default values
+AEnemy::AEnemy()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	EnemyRoot = CreateDefaultSubobject<UBoxComponent>(TEXT("Enemy"));
+	RootComponent = EnemyRoot;
+	EnemyRoot->SetGenerateOverlapEvents(true);
+
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
+	MeshComponent->SetupAttachment(EnemyRoot);
+}
+
+// Called when the game starts or when spawned
+void AEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+	EnemyMovement = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
+	EnemyMovement.Normalize();
+	SetActorRotation(EnemyMovement.Rotation());
+	
+}
+
+// Called every frame
+void AEnemy::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	FVector NewLocation = GetActorLocation();
+	NewLocation += (EnemyMovement * Speed * DeltaTime);
+	SetActorLocation(NewLocation);
+
+	CurrentTurnDelay -= DeltaTime;
+
+	if (CurrentTurnDelay < 0.f)
+	{
+		EnemyMovement = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
+		EnemyMovement.Normalize();
+		SetActorRotation(EnemyMovement.Rotation());
+
+		CurrentTurnDelay = FMath::FRandRange(TurnDelayMin, TurnDelayMax);
+	}
+}
+
+void AEnemy::Hit()
+{
+}
+

@@ -4,19 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Bullet.generated.h"
-
-class UShapeComponent;
-
+#include "Enemy.generated.h"
 
 UCLASS()
-class CSP_API ABullet : public AActor
+class CSP_API AEnemy : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABullet();
+	AEnemy();
 
 protected:
 	// Called when the game starts or when spawned
@@ -26,21 +23,27 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-		float Speed = 400.f;
-		
+	FVector EnemyMovement = FVector(1.0f, 0.f, 0.f);
+
+	void Hit();
+
+private:
 
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RootSphere = nullptr;
+	float Speed = 150.f;
 
 	UPROPERTY(EditAnywhere)
-		float TimeBeforeDestroyed = 5.f;
+	float TurnDelayMax = 0.5f;
 
-		float TimeLived = 0.f;
+	UPROPERTY(EditAnywhere)
+	float TurnDelayMin = 0.f;
+
+	float CurrentTurnDelay = 0.f;
+
+	UPROPERTY(EditAnywhere)
+	UShapeComponent* EnemyRoot = nullptr;
+
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* MeshComponent;
 	
-	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
-			bool bFromSweep, const FHitResult& SweepResult);
-
 };
