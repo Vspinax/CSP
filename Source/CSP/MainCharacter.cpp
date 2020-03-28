@@ -2,6 +2,7 @@
 
 
 #include "MainCharacter.h"
+#include "Bullet.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
@@ -168,8 +169,8 @@ void AMainCharacter::MoveRight(float Value)
 
 void AMainCharacter::Shoot()
 {
-	//GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 150.f,
-	//	GetActorRotation());
+	/*GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 150.f,
+		GetActorRotation());*/
 
 	// the number is the offsett of the bullet, the distance from the character where the  bullet will spawn
 
