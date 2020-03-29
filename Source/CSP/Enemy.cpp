@@ -58,3 +58,23 @@ void AEnemy::Hit()
 {
 }
 
+void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(AMainCharacter::StaticClass()))
+	{
+		//// Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
+		//Cast<AEnemy>(OtherActor)->Destroy();
+
+		////Destroy Bullet:
+		//Destroy();
+
+		UE_LOG(LogTemp, Warning, TEXT("Player Hit"))
+		AMainCharacter* TempHp = Cast<AMainCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+		TempHp->Hp--;
+		Destroy();
+
+	}
+}
+

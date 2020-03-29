@@ -3,6 +3,8 @@
 
 #include "MainCharacter.h"
 #include "Bullet.h"
+#include "Enemy.h"
+
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
@@ -42,6 +44,8 @@ AMainCharacter::AMainCharacter()
 	}
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
+
+	Hp = 3;
 
 	DashCooldown = 1.f;
 	DashAvailable = 0.f;
@@ -125,6 +129,7 @@ void AMainCharacter::Tick(float DeltaTime)
 		DashAvailable = 0.f;
 
 	}
+
 }
 
 // Called to bind functionality to input
@@ -174,7 +179,7 @@ void AMainCharacter::Shoot()
 
 	// the number is the offsett of the bullet, the distance from the character where the  bullet will spawn
 
-	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 150.f);
+	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 50.f);
 	FRotator ShootingSpawnRotation = GetActorRotation();
 
 	GetWorld()->SpawnActor<ABullet>(BulletBlueprint, ShootingSpawnLocation, ShootingSpawnRotation);
@@ -193,6 +198,18 @@ void AMainCharacter::StopShooting()
 
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor->IsA(AEnemy::StaticClass()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Player Died"))
+		OtherActor->Destroy();
+
+		Hp--;
+
+		if (Hp == 0)
+		{
+			Destroy();
+		}
+	}
 }
 
 void AMainCharacter::StartDash()
@@ -209,6 +226,8 @@ void AMainCharacter::StopDash()
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	DashTimer = 0.f;
 }
+
+
 
 
 //// function for shooting

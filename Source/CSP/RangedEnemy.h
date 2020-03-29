@@ -4,16 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Enemy.generated.h"
+#include "Components/ShapeComponent.h"
+#include "RangedEnemy.generated.h"
+
 
 UCLASS()
-class CSP_API AEnemy : public AActor
+class CSP_API ARangedEnemy : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AEnemy();
+	ARangedEnemy();
 
 protected:
 	// Called when the game starts or when spawned
@@ -23,32 +25,23 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FVector EnemyMovement = FVector(1.0f, 0.f, 0.f);
+	FVector EnemyRotation = FVector(1.0f, 0.f, 0.f);
 
-	void Hit();
-
-	UFUNCTION()
-		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
-			bool bFromSweep, const FHitResult& SweepResult);
 
 private:
 
 	UPROPERTY(EditAnywhere)
-	float Speed = 150.f;
+		float TurnDelayMax = 0.5f;
 
 	UPROPERTY(EditAnywhere)
-	float TurnDelayMax = 0.5f;
-
-	UPROPERTY(EditAnywhere)
-	float TurnDelayMin = 0.f;
+		float TurnDelayMin = 0.f;
 
 	float CurrentTurnDelay = 0.f;
 
 	UPROPERTY(EditAnywhere)
-	UShapeComponent* EnemyRoot = nullptr;
+		UShapeComponent* RangedEnemyRoot = nullptr;
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* MeshComponent;
-	
+
 };

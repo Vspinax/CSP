@@ -59,6 +59,10 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
+	UPROPERTY(EditAnywhere, Category = "PlayerStat")
+		int32 Hp;
+
+
 private:
 
 	///** Max Movementspeed of the Character*/
