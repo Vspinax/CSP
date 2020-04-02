@@ -72,7 +72,7 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherAc
 
 		UE_LOG(LogTemp, Warning, TEXT("Player Hit"))
 		AMainCharacter* TempHp = Cast<AMainCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-		TempHp->Hp--;
+		TempHp->TakeDamage();
 		Destroy();
 
 	}

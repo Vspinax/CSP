@@ -196,20 +196,30 @@ void AMainCharacter::StopShooting()
 	IsShooting = false;
 }
 
+void AMainCharacter::TakeDamage()
+{
+	Hp--;
+
+	if (Hp == 0)
+	{
+		Destroy();
+	}
+}
+
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(AEnemy::StaticClass()))
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Died"))
-		OtherActor->Destroy();
+	//if (OtherActor->IsA(AEnemy::StaticClass()))
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Player Died"))
+	//	OtherActor->Destroy();
 
-		Hp--;
+	//	Hp--;
 
-		if (Hp == 0)
-		{
-			Destroy();
-		}
-	}
+	//	if (Hp == 0)
+	//	{
+	//		Destroy();
+	//	}
+	//}
 }
 
 void AMainCharacter::StartDash()

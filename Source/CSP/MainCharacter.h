@@ -55,6 +55,8 @@ public:
 
 	void StopShooting();
 
+	void TakeDamage();
+
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
