@@ -47,10 +47,11 @@ AMainCharacter::AMainCharacter()
 
 	Hp = 3;
 
-	DashCooldown = 1.f;
+	DashCooldown = 0.3f;
 	DashAvailable = 0.f;
 	DashTimer = 0.f;
 	IsDashing = false;
+
 }
 
 // Called when the game starts or when spawned
@@ -68,7 +69,11 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+
 	DashAvailable += DeltaTime;
+	DashTimer += DeltaTime;
+
+
 
 	/// Move the cursor
 	FHitResult Hit;
@@ -115,17 +120,23 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	if (IsDashing)
 	{
-		DashTimer += DeltaTime;
-		if (DashTimer < 1.f) {
-			GetCharacterMovement()->MaxAcceleration = 100000.f;
-			GetCharacterMovement()->MaxWalkSpeed = 2500.f;
-			if (DashTimer > 1.f) {
+		GetCharacterMovement()->MaxAcceleration = 100000.f;
+		GetCharacterMovement()->MaxWalkSpeed = 2500.f;
+		UE_LOG(LogTemp, Warning, TEXT("Before ac= %f"), GetCharacterMovement()->MaxAcceleration)
+			UE_LOG(LogTemp, Warning, TEXT("Before speeed= %f"), GetCharacterMovement()->MaxWalkSpeed)
+
+			if (DashTimer >= 0.2f) {
 				// 2048 and 600 is the default 
+			
 				GetCharacterMovement()->MaxAcceleration = 2048.f;
 				GetCharacterMovement()->MaxWalkSpeed = 600.f;
+				UE_LOG(LogTemp, Warning, TEXT("after ac= %f"), GetCharacterMovement()->MaxAcceleration)
+					UE_LOG(LogTemp, Warning, TEXT("after speeed= %f"), GetCharacterMovement()->MaxWalkSpeed)
+
 			}
-		}
-		IsDashing = false;
+	////}
+
+
 		DashAvailable = 0.f;
 
 	}
@@ -226,14 +237,17 @@ void AMainCharacter::StartDash()
 {
 	if (DashAvailable > DashCooldown)
 	{
+		DashTimer = 0;
 		IsDashing = true;
 	}
 }
+
 
 void AMainCharacter::StopDash()
 {
 	GetCharacterMovement()->MaxAcceleration = 2048.f;
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
+	IsDashing = false;
 	DashTimer = 0.f;
 }
 

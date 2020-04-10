@@ -77,6 +77,8 @@ private:
 
 	float ShootSpeed = 0.3f;
 
+	float UpdateTime = 0.f;
+
 
 	/**The bullet the pawn shoots*/
 	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
