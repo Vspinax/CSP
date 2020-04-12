@@ -32,6 +32,9 @@ public:
 			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult& SweepResult);
 
+	UPROPERTY(VisibleAnywhere)
+		class USphereComponent* CollisionSphere;
+
 private:
 
 	UPROPERTY(EditAnywhere)

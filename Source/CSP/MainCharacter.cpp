@@ -12,6 +12,8 @@
 #include "Materials/Material.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
+
 
 
 // Sets default values
@@ -211,9 +213,12 @@ void AMainCharacter::TakeDamage()
 {
 	Hp--;
 
-	if (Hp == 0)
+	if (Hp <= 0)
 	{
-		Destroy();
+
+
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+
 	}
 }
 

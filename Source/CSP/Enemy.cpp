@@ -4,6 +4,7 @@
 #include "Enemy.h"
 #include "MainCharacter.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/StaticMeshComponent.h"
@@ -22,6 +23,11 @@ AEnemy::AEnemy()
 
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetupAttachment(EnemyRoot);
+
+	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
+	CollisionSphere->SetupAttachment(EnemyRoot);
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -31,6 +37,9 @@ void AEnemy::BeginPlay()
 	EnemyMovement = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
 	EnemyMovement.Normalize();
 	SetActorRotation(EnemyMovement.Rotation());
+
+	CollisionSphere->SetGenerateOverlapEvents(true);
+	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::OnOverlap);
 	
 }
 
@@ -62,19 +71,31 @@ void AEnemy::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherAc
 	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor->IsA(AMainCharacter::StaticClass()))
+	//if (OtherActor->IsA(AMainCharacter::StaticClass()))
+	//{
+	//	//// Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
+	//	//Cast<AEnemy>(OtherActor)->Destroy();
+
+	//	////Destroy Bullet:
+	//	//Destroy();
+
+	//	UE_LOG(LogTemp, Warning, TEXT("Player Hit"))
+	//	AMainCharacter* TempHp = Cast<AMainCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
+	//	TempHp->TakeDamage();
+	//	Destroy();
+
+	//}
+
+	if (OtherActor)
 	{
-		//// Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
-		//Cast<AEnemy>(OtherActor)->Destroy();
-
-		////Destroy Bullet:
-		//Destroy();
-
-		UE_LOG(LogTemp, Warning, TEXT("Player Hit"))
-		AMainCharacter* TempHp = Cast<AMainCharacter>(GetWorld()->GetFirstPlayerController()->GetPawn());
-		TempHp->TakeDamage();
-		Destroy();
-
+		AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
+		if (MainCharacter)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Player Hit"))
+			AMainCharacter* TempHp = Cast<AMainCharacter>(OtherActor);
+			TempHp->TakeDamage();
+			Destroy();
+		}
 	}
 }
 
