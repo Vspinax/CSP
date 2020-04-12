@@ -27,6 +27,8 @@ AEnemy::AEnemy()
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("CollisionSphere"));
 	CollisionSphere->SetupAttachment(EnemyRoot);
 
+	EnemyHealth = 8;
+
 	
 }
 
@@ -60,6 +62,11 @@ void AEnemy::Tick(float DeltaTime)
 		SetActorRotation(EnemyMovement.Rotation());
 
 		CurrentTurnDelay = FMath::FRandRange(TurnDelayMin, TurnDelayMax);
+	}
+
+	if (EnemyHealth <= 0)
+	{
+		Destroy();
 	}
 }
 

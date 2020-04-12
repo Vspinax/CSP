@@ -7,6 +7,7 @@
 #include "Components/ShapeComponent.h"
 #include "RangedEnemy.generated.h"
 
+class ARangedEnemyBullet;
 
 UCLASS()
 class CSP_API ARangedEnemy : public AActor
@@ -26,6 +27,21 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	FVector EnemyRotation = FVector(1.0f, 0.f, 0.f);
+
+	UPROPERTY(EditAnywhere)
+		float RangedEnemyHealth;
+
+	UFUNCTION()
+		void Shoot();
+
+	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
+		TSubclassOf<ARangedEnemyBullet> BulletBlueprint;
+
+	UPROPERTY(EditAnywhere)
+		float ReloadTime;
+
+	UPROPERTY(EditAnywhere)
+		float ShootAvailable;
 
 
 private:

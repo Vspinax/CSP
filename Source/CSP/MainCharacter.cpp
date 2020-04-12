@@ -136,7 +136,6 @@ void AMainCharacter::Tick(float DeltaTime)
 					UE_LOG(LogTemp, Warning, TEXT("after speeed= %f"), GetCharacterMovement()->MaxWalkSpeed)
 
 			}
-	////}
 
 
 		DashAvailable = 0.f;

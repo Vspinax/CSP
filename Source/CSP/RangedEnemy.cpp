@@ -2,6 +2,7 @@
 
 
 #include "RangedEnemy.h"
+#include "RangedEnemyBullet.h"
 #include "MainCharacter.h"
 #include "Components/BoxComponent.h"
 #include "Engine/World.h"
@@ -21,6 +22,9 @@ ARangedEnemy::ARangedEnemy()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetupAttachment(RangedEnemyRoot);
 
+	RangedEnemyHealth = 6;
+	ReloadTime = 1.5;
+	ShootAvailable = 0;
 }
 
 // Called when the game starts or when spawned
@@ -39,6 +43,14 @@ void ARangedEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	CurrentTurnDelay -= DeltaTime;
+	ShootAvailable += DeltaTime;
+
+	if (ShootAvailable > 1.5f)
+	{
+		Shoot();
+		ShootAvailable = 0;
+	}
+
 
 	if (CurrentTurnDelay < 0.f)
 	{
@@ -48,6 +60,25 @@ void ARangedEnemy::Tick(float DeltaTime)
 
 		CurrentTurnDelay = FMath::FRandRange(TurnDelayMin, TurnDelayMax);
 	}
+
+	if (RangedEnemyHealth <= 0)
+	{
+		Destroy();
+	}
+
+}
+
+void ARangedEnemy::Shoot()
+{
+	/*GetWorld()->SpawnActor<ABullet>(BulletBlueprint, GetActorLocation() + GetActorForwardVector() * 150.f,
+		GetActorRotation());*/
+
+		// the number is the offsett of the bullet, the distance from the character where the  bullet will spawn
+
+	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 50.f);
+	FRotator ShootingSpawnRotation = GetActorRotation();
+
+	GetWorld()->SpawnActor<ARangedEnemyBullet>(BulletBlueprint, ShootingSpawnLocation, ShootingSpawnRotation);
 
 }
 

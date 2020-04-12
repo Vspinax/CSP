@@ -35,6 +35,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 		class USphereComponent* CollisionSphere;
 
+	UPROPERTY(EditAnywhere, Category = " Enemy Stat")
+		float EnemyHealth;
+
 private:
 
 	UPROPERTY(EditAnywhere)
