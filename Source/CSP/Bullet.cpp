@@ -68,4 +68,10 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
         Destroy();
     }
 
+    if (OtherActor != this)
+    {
+        Destroy();
+    }
+        
+
 }
