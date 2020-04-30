@@ -55,16 +55,6 @@ void ARangedEnemyBullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		Destroy();
 	}
 
-	if (OtherActor != this)
-	{
-		if (OtherActor == this)
-		{
-
-		}
-		else {
-			Destroy();
-		}
-	}
 }
 
 
