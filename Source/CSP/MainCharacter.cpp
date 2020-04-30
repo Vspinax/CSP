@@ -4,6 +4,7 @@
 #include "MainCharacter.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "SpecialAttackBullet.h"
 
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -53,6 +54,8 @@ AMainCharacter::AMainCharacter()
 	DashAvailable = 0.f;
 	DashTimer = 0.f;
 	IsDashing = false;
+	IsShootingSpecialAttack = false;
+	SpecialAttackChargetime = 0.f;
 
 }
 
@@ -75,7 +78,10 @@ void AMainCharacter::Tick(float DeltaTime)
 	DashAvailable += DeltaTime;
 	DashTimer += DeltaTime;
 
-
+	if (SpecialAttackChargetime <= SpecialAttackCooldown)
+	{
+		SpecialAttackChargetime += DeltaTime;
+	}
 
 	/// Move the cursor
 	FHitResult Hit;
@@ -142,6 +148,17 @@ void AMainCharacter::Tick(float DeltaTime)
 
 	}
 
+	if (IsShootingSpecialAttack)
+	{
+		if (SpecialAttackChargetime >= SpecialAttackCooldown)
+		{
+			SpecialAttack();
+			SpecialAttackChargetime = 0.f;
+		}
+
+		IsShootingSpecialAttack = false;
+	}
+
 }
 
 // Called to bind functionality to input
@@ -158,6 +175,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMainCharacter::StartDash);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::StopDash);
+
+	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &AMainCharacter::StartSpecialAttack);
+
 }
 
 void AMainCharacter::MoveForward(float Value)
@@ -219,6 +239,20 @@ void AMainCharacter::TakeDamage()
 		UGameplayStatics::SetGamePaused(GetWorld(), true);
 
 	}
+}
+
+void AMainCharacter::SpecialAttack()
+{
+	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 50.f);
+	FRotator ShootingSpawnRotation = GetActorRotation();
+
+	GetWorld()->SpawnActor<ASpecialAttackBullet>(SpecialAttackBulletBlueprint, ShootingSpawnLocation, ShootingSpawnRotation);
+}
+
+void AMainCharacter::StartSpecialAttack()
+{
+
+		IsShootingSpecialAttack = true;
 }
 
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

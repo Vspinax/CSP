@@ -75,7 +75,7 @@ void ARangedEnemy::Shoot()
 
 		// the number is the offsett of the bullet, the distance from the character where the  bullet will spawn
 
-	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 50.f);
+	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 250.f);
 	FRotator ShootingSpawnRotation = GetActorRotation();
 
 	GetWorld()->SpawnActor<ARangedEnemyBullet>(BulletBlueprint, ShootingSpawnLocation, ShootingSpawnRotation);

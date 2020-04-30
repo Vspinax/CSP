@@ -7,6 +7,7 @@
 #include "MainCharacter.generated.h"
 
 class ABullet;
+class ASpecialAttackBullet;
 
 UCLASS()
 class CSP_API AMainCharacter : public ACharacter
@@ -30,6 +31,11 @@ public:
 		float BaseTurnRate;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
+
+	UPROPERTY(EditAnywhere, Category ="Special Attack")
+		float SpecialAttackCooldown = 10.f;
+
+		float SpecialAttackChargetime;
 
 
 protected:
@@ -56,6 +62,10 @@ public:
 	void StopShooting();
 
 	void TakeDamage();
+
+	void SpecialAttack();
+
+	void StartSpecialAttack();
 
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -84,7 +94,12 @@ private:
 	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
 	TSubclassOf<ABullet> BulletBlueprint;
 
+	UPROPERTY(EditAnywhere, Category = "Special Attack")
+	TSubclassOf<ASpecialAttackBullet> SpecialAttackBulletBlueprint;
+
 	bool IsShooting;
+
+	bool IsShootingSpecialAttack;
 
 	float NextShot = -0.1f;
 

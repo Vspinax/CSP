@@ -4,19 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Bullet.generated.h"
+#include "SpecialAttackBullet.generated.h"
 
 class UShapeComponent;
 
-
 UCLASS()
-class CSP_API ABullet : public AActor
+class CSP_API ASpecialAttackBullet : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABullet();
+	ASpecialAttackBullet();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +27,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		float Speed = 400.f;
-		
+
 
 	UPROPERTY(EditAnywhere)
 		UShapeComponent* RootSphere = nullptr;
@@ -36,13 +35,11 @@ public:
 	UPROPERTY(EditAnywhere)
 		float TimeBeforeDestroyed = 5.f;
 
-		float TimeLived = 0.f;
-	
+	float TimeLived = 0.f;
+
 	UFUNCTION()
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult& SweepResult);
-
-
 
 };

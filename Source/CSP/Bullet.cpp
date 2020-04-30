@@ -66,6 +66,30 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
         RangedEnemy->RangedEnemyHealth -= 2;
 
         Destroy();
+    }if (OtherActor->IsA(AEnemy::StaticClass()))
+    {
+        // Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
+        //Cast<AEnemy>(OtherActor)->Destroy();                  // Insta kill
+
+        AEnemy* Enemy = Cast<AEnemy>(OtherActor);
+        Enemy->EnemyHealth -= 2;
+
+        //Destroy Bullet:
+        Destroy();
+    }
+
+    if (OtherActor->IsA(ARangedEnemy::StaticClass()))
+    {
+
+        ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
+        RangedEnemy->RangedEnemyHealth -= 2;
+
+        Destroy();
+    }
+
+    if (OtherActor != this)
+    {
+        Destroy();
     }
 
 }
