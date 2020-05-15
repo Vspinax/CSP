@@ -175,6 +175,9 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("Dash", IE_Pressed, this, &AMainCharacter::StartDash);
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::StopDash);
+	
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &AMainCharacter::Jump);
 
 	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &AMainCharacter::StartSpecialAttack);
 
