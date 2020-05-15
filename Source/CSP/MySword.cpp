@@ -1,52 +1,35 @@
-
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Bullet.h"
+#include "MySword.h"
 #include "Enemy.h"
 #include "RangedEnemy.h"
-#include "Components/SphereComponent.h"
 
 // Sets default values
-ABullet::ABullet()
+AMySword::AMySword()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
-	RootComponent = RootSphere;
-
-	RootSphere->SetGenerateOverlapEvents(true);
-	RootSphere->OnComponentBeginOverlap.AddDynamic(this, &ABullet::OnOverlap);
-
+    
 }
 
 // Called when the game starts or when spawned
-void ABullet::BeginPlay()
+void AMySword::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ABullet::Tick(float DeltaTime)
+void AMySword::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-    FVector NewLocation = GetActorLocation();
-    NewLocation += GetActorForwardVector() * Speed * DeltaTime;
-    SetActorLocation(NewLocation);
-
-    TimeLived += DeltaTime;
-    if (TimeLived > TimeBeforeDestroyed)
-    {
-        this->Destroy();
-    }
 }
 
-void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-    UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
-    bool bFromSweep, const FHitResult& SweepResult)
+void AMySword::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
+	bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor->IsA(AEnemy::StaticClass()))
     {
@@ -62,7 +45,7 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
 
     if (OtherActor->IsA(ARangedEnemy::StaticClass()))
     {
-       
+
         ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
         RangedEnemy->RangedEnemyHealth -= 2;
 
@@ -92,5 +75,4 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
     {
         Destroy();
     }
-
 }
