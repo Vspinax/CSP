@@ -18,6 +18,12 @@ public:
 	// Sets default values for this actor's properties
 	AEnemySpawner();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category ="Spawn")
+		class UBoxComponent* SpawningBox;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawn")
+	TSubclassOf<class AEnemy> PawnToSpawn;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -30,6 +36,12 @@ public:
 	float SpawnTimer;
 		
 	float SpawnCharge;
+
+	UFUNCTION(BlueprintPure, Category = "Spawn")
+		FVector GetSpawnPoint();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category ="Spawn")
+	void SpawnOurPawn(UClass* ToSpawn, const FVector& Location);
 
 	//UPROPERTY(EditAnywhere, Category = "Pawn Setup")
 	//	TSubclassOf<AEnemy> EnemyBlueprint;
