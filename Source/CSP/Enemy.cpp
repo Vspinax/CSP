@@ -10,7 +10,6 @@
 #include "Components/StaticMeshComponent.h"
 
 
-
 // Sets default values
 AEnemy::AEnemy()
 {

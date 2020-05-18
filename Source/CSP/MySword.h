@@ -28,7 +28,7 @@ public:
 		float Speed = 400.f;
 
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UShapeComponent* RootSphere = nullptr;
 
 	UPROPERTY(EditAnywhere)
@@ -40,5 +40,11 @@ public:
 		void OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 			UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
 			bool bFromSweep, const FHitResult& SweepResult);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Collision")
+	class	UBoxComponent* CollisionBox;
+
+	UPROPERTY(EditAnywhere, Category = "Mesh")
+		class	UStaticMesh* Mesh;
 
 };

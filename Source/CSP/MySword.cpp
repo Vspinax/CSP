@@ -4,12 +4,28 @@
 #include "MySword.h"
 #include "Enemy.h"
 #include "RangedEnemy.h"
+#include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
+#include "Engine/StaticMesh.h"
+
 
 // Sets default values
 AMySword::AMySword()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
+    RootSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
+    //RootSphere->SetupAttachment(GetRootComponent());
+    RootComponent = RootSphere;
+
+    //Mesh = CreateDefaultSubobject<UStaticMesh>(TEXT("Mesh"));
+    CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+    CollisionBox->SetupAttachment(RootSphere);
+
+    CollisionBox->SetGenerateOverlapEvents(true);
+    CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &AMySword::OnOverlap);
     
 }
 

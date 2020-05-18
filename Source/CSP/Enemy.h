@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Enemy.generated.h"
 
+
+
 UCLASS()
 class CSP_API AEnemy : public AActor
 {
