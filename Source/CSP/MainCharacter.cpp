@@ -170,6 +170,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMainCharacter::StartShooting);
 	PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AMainCharacter::StopShooting);
 
@@ -177,6 +179,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("Dash", IE_Released, this, &AMainCharacter::StopDash);
 
 	PlayerInputComponent->BindAction("SpecialAttack", IE_Pressed, this, &AMainCharacter::StartSpecialAttack);
+	
 
 }
 
