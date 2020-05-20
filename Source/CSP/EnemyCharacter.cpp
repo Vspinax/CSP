@@ -2,6 +2,8 @@
 
 
 #include "EnemyCharacter.h"
+#include "Bullet.h"
+#include "SpecialAttackBullet.h"
 #include "Components/SphereComponent.h"
 #include "AIController.h"
 #include "MainCharacter.h"
@@ -22,6 +24,9 @@ AEnemyCharacter::AEnemyCharacter()
 	CombatSphere->SetupAttachment(GetRootComponent());
 	CombatSphere->InitSphereRadius(75.f);
 
+	EnemyHealth = 8;
+
+
 
 }
 
@@ -37,12 +42,18 @@ void AEnemyCharacter::BeginPlay()
 
 	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::CombatSphereOnOverlapBegin);
 	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacter::CombatSphereOnOverlapEnd);
+
 }
 
 // Called every frame
 void AEnemyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (EnemyHealth <= 0)
+	{
+		Destroy();
+	}
 
 }
 
@@ -70,13 +81,38 @@ void AEnemyCharacter::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComp
 }
 void AEnemyCharacter::CombatSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	if (OtherActor)
+	{
+		AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
+		if (MainCharacter)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Player Hit"))
+				AMainCharacter* TempHp = Cast<AMainCharacter>(OtherActor);
+			TempHp->TakeDamage();
+			Destroy();
+		}
+	}
 
+	if (OtherActor->IsA(ABullet::StaticClass()))
+	{
+		ABullet* Bullet = Cast<ABullet>(OtherActor);
+		EnemyHealth -= 2;
+		Bullet->Destroy();
+	}
+
+	if (OtherActor->IsA(ASpecialAttackBullet::StaticClass()))
+	{
+		ASpecialAttackBullet* SpecialAttackBullet = Cast<ASpecialAttackBullet>(OtherActor);
+		EnemyHealth -= 20;
+		
+	}
 }
 
 void AEnemyCharacter::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex)
 {
 
 }
+
 
 void AEnemyCharacter::MoveToTarget(AMainCharacter* MainCharacter)
 {
@@ -95,6 +131,7 @@ void AEnemyCharacter::MoveToTarget(AMainCharacter* MainCharacter)
 		AIController->MoveTo(MoveRequest, &NavPath);
 
 		//Get som explaining T_T for TArray
+		// FOR DEBUG
 		TArray<FNavPathPoint> PathPoints = NavPath->GetPathPoints();
 		for (auto Point : PathPoints) // give a point, which is a element in the arrays which is a PathPoint
 		{

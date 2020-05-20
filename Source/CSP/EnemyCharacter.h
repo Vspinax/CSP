@@ -68,8 +68,12 @@ public:
 	UFUNCTION()
 		virtual void CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex);
 
+
 	void MoveToTarget(class AMainCharacter* Target);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "AI")
 		class AAIController* AIController;
+
+	UPROPERTY(EditAnywhere, Category = " Enemy Stat")
+		float EnemyHealth;
 };

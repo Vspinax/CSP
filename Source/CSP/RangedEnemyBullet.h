@@ -25,8 +25,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere)
-		float Speed = 400.f;
+	UPROPERTY(EditAnywhere, Category = " Bullet Stat")
+		float Speed = 230.f;
 
 
 	UPROPERTY(EditAnywhere)

@@ -4,6 +4,7 @@
 
 #include "Bullet.h"
 #include "Enemy.h"
+#include "EnemyCharacter.h"
 #include "RangedEnemy.h"
 #include "Components/SphereComponent.h"
 
@@ -44,9 +45,7 @@ void ABullet::Tick(float DeltaTime)
     }
 }
 
-void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-    UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex,
-    bool bFromSweep, const FHitResult& SweepResult)
+void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
     if (OtherActor->IsA(AEnemy::StaticClass()))
     {
@@ -88,7 +87,12 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
         Destroy();
     }
 
-    if (OtherActor != this)
+     if (OtherActor->IsA(AEnemyCharacter::StaticClass()))
+    {
+     
+    }
+
+    else if (OtherActor != this)
     {
         Destroy();
     }
