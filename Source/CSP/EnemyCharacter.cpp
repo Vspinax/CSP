@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "AIController.h"
 #include "MainCharacter.h"
+#include "Kismet/GameplayStatics.h"
+
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -31,10 +33,10 @@ void AEnemyCharacter::BeginPlay()
 	AIController = Cast<AAIController>(GetController());
 	
 	AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::AgroSphereOnOverlapBegin);
-	//AgroSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacter::AgroSphereOnOverlapEnd);
+	AgroSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacter::AgroSphereOnOverlapEnd);
 
 	CombatSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemyCharacter::CombatSphereOnOverlapBegin);
-	//CombatSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacter::CombatSphereOnOverlapEnd);
+	CombatSphere->OnComponentEndOverlap.AddDynamic(this, &AEnemyCharacter::CombatSphereOnOverlapEnd);
 }
 
 // Called every frame
@@ -62,7 +64,7 @@ void AEnemyCharacter::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedCo
 		}
 	}
 }
-void AEnemyCharacter::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AEnemyCharacter::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex)
 {
 
 }
@@ -71,7 +73,7 @@ void AEnemyCharacter::CombatSphereOnOverlapBegin(UPrimitiveComponent* Overlapped
 
 }
 
-void AEnemyCharacter::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AEnemyCharacter::CombatSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex)
 {
 
 }
@@ -83,5 +85,24 @@ void AEnemyCharacter::MoveToTarget(AMainCharacter* MainCharacter)
 	if (AIController)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MoveToTarget()"));
+
+		FAIMoveRequest MoveRequest;
+		MoveRequest.SetGoalActor(MainCharacter);
+		MoveRequest.SetAcceptanceRadius(5.0f);
+
+		FNavPathSharedPtr NavPath;
+
+		AIController->MoveTo(MoveRequest, &NavPath);
+
+		//Get som explaining T_T for TArray
+		TArray<FNavPathPoint> PathPoints = NavPath->GetPathPoints();
+		for (auto Point : PathPoints) // give a point, which is a element in the arrays which is a PathPoint
+		{
+			FVector Location = Point.Location;
+			UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Red, 10.f, 1.5f);
+		}
 	}
 }
+
+
+// ide for enemy collision mot bullet - bytte fra at bullet gjør dmg til at enemy collision tar dmg
