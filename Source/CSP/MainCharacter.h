@@ -71,9 +71,31 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-	UPROPERTY(EditAnywhere, Category = "PlayerStat")
-		int32 Hp;
 
+	//STATS
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float MaxHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float MaxEnergy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float Energy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float DashCooldown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float DashAvailable;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "PlayerStat")
+		float DashTimer;
+
+	UPROPERTY()
+		bool IsDashing;
 
 private:
 
@@ -112,17 +134,6 @@ private:
 	UFUNCTION()
 		void StopDash();
 
-	UPROPERTY(EditAnywhere)
-		float DashCooldown;
-
-	UPROPERTY()
-		float DashAvailable;
-
-	UPROPERTY()
-		float DashTimer;
-
-	UPROPERTY()
-		bool IsDashing;
 
 };
 

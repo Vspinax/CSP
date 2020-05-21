@@ -48,7 +48,8 @@ AMainCharacter::AMainCharacter()
 	CursorToWorld->DecalSize = FVector(16.0f, 32.0f, 32.0f);
 	CursorToWorld->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f).Quaternion());
 
-	Hp = 3;
+	MaxHealth = 5;
+	Health = 5;
 
 	DashCooldown = 0.3f;
 	DashAvailable = 0.f;
@@ -233,9 +234,9 @@ void AMainCharacter::StopShooting()
 
 void AMainCharacter::TakeDamage()
 {
-	Hp--;
+	Health--;
 
-	if (Hp <= 0)
+	if (Health <= 0)
 	{
 
 
