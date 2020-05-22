@@ -130,7 +130,7 @@ void AMainCharacter::Tick(float DeltaTime)
 	if (IsDashing)
 	{
 		GetCharacterMovement()->MaxAcceleration = 100000.f;
-		GetCharacterMovement()->MaxWalkSpeed = 2500.f;
+		GetCharacterMovement()->MaxWalkSpeed = 1750.f;
 		UE_LOG(LogTemp, Warning, TEXT("Before ac= %f"), GetCharacterMovement()->MaxAcceleration)
 			UE_LOG(LogTemp, Warning, TEXT("Before speeed= %f"), GetCharacterMovement()->MaxWalkSpeed)
 
@@ -172,6 +172,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+
+	PlayerInputComponent->BindAction("Refill", IE_Pressed, this, &AMainCharacter::Refill);
 
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMainCharacter::StartShooting);
 	PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AMainCharacter::StopShooting);
@@ -257,6 +259,11 @@ void AMainCharacter::StartSpecialAttack()
 {
 
 		IsShootingSpecialAttack = true;
+}
+
+void AMainCharacter::Refill()
+{
+	Health = 5;
 }
 
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

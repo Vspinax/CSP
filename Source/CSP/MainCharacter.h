@@ -32,9 +32,10 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 		float BaseLookUpRate;
 
-	UPROPERTY(EditAnywhere, Category ="Special Attack")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="Special Attack")
 		float SpecialAttackCooldown = 10.f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Special Attack")
 		float SpecialAttackChargetime;
 
 
@@ -66,6 +67,8 @@ public:
 	void SpecialAttack();
 
 	void StartSpecialAttack();
+
+	void Refill();
 
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
