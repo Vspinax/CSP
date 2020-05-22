@@ -4,7 +4,10 @@
 #include "RangedEnemy.h"
 #include "RangedEnemyBullet.h"
 #include "MainCharacter.h"
+#include "Bullet.h"
+#include "SpecialAttackBullet.h"
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/StaticMeshComponent.h"
@@ -22,9 +25,15 @@ ARangedEnemy::ARangedEnemy()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("MeshComponent"));
 	MeshComponent->SetupAttachment(RangedEnemyRoot);
 
+	AgroSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AgroSphere"));
+	AgroSphere->SetupAttachment(GetRootComponent());
+	AgroSphere->InitSphereRadius(1000.f);
+
 	RangedEnemyHealth = 6;
 	ReloadTime = 1.5;
 	ShootAvailable = 0;
+
+	InRange = false;
 }
 
 // Called when the game starts or when spawned
@@ -35,6 +44,11 @@ void ARangedEnemy::BeginPlay()
 	EnemyRotation = GetWorld()->GetFirstPlayerController()->GetPawn()->GetActorLocation() - GetActorLocation();
 	EnemyRotation.Normalize();
 	SetActorRotation(EnemyRotation.Rotation());
+
+	RangedEnemyRoot->OnComponentBeginOverlap.AddDynamic(this, &ARangedEnemy::BoxOnOverlapBegin);
+
+	AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &ARangedEnemy::AgroSphereOnOverlapBegin);
+	AgroSphere->OnComponentEndOverlap.AddDynamic(this, &ARangedEnemy::AgroSphereOnOverlapEnd);
 	
 }
 
@@ -45,12 +59,15 @@ void ARangedEnemy::Tick(float DeltaTime)
 	CurrentTurnDelay -= DeltaTime;
 	ShootAvailable += DeltaTime;
 
-	if (ShootAvailable > 1.5f)
+	if (InRange)
 	{
-		Shoot();
-		ShootAvailable = 0;
+		if (ShootAvailable > 1.5f)
+		{
+			Shoot();
+			ShootAvailable = 0;
+			UE_LOG(LogTemp, Warning, TEXT("Ranged Enemy Shot"))
+		}
 	}
-
 
 	if (CurrentTurnDelay < 0.f)
 	{
@@ -75,10 +92,59 @@ void ARangedEnemy::Shoot()
 
 		// the number is the offsett of the bullet, the distance from the character where the  bullet will spawn
 
-	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 100.f);
+	FVector ShootingSpawnLocation = GetActorLocation() + (GetActorForwardVector() * 30.f);
 	FRotator ShootingSpawnRotation = GetActorRotation();
 
 	GetWorld()->SpawnActor<ARangedEnemyBullet>(BulletBlueprint, ShootingSpawnLocation, ShootingSpawnRotation);
 
+}
+
+void ARangedEnemy::BoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(ABullet::StaticClass()))
+	{
+		ABullet* Bullet = Cast<ABullet>(OtherActor);
+		RangedEnemyHealth -= 2;
+		Bullet->Destroy();
+	}
+
+	if (OtherActor->IsA(ASpecialAttackBullet::StaticClass()))
+	{
+		ASpecialAttackBullet* SpecialAttackBullet = Cast<ASpecialAttackBullet>(OtherActor);
+		RangedEnemyHealth -= 20;
+
+	}
+
+}
+
+void ARangedEnemy::AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(AMainCharacter::StaticClass()))
+	{
+		//AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
+		//if (MainCharacter)
+		//{
+		//	InRange = true;
+		//}
+
+		InRange = true;
+		UE_LOG(LogTemp, Warning, TEXT("Player In Range"))
+	}
+
+}
+
+void ARangedEnemy::AgroSphereOnOverlapEnd(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex)
+{
+	if (OtherActor->IsA(AMainCharacter::StaticClass()))
+	{
+	/*	AMainCharacter* MainCharacter = Cast<AMainCharacter>(OtherActor);
+		if (MainCharacter)
+		{
+			InRange = false;
+		}*/
+
+		InRange = false;
+		UE_LOG(LogTemp, Warning, TEXT("Player Outside Range"))
+	}
 }
 

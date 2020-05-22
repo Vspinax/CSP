@@ -60,13 +60,13 @@ void ASpecialAttackBullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, A
 		//Destroy();
 	}
 
-	if (OtherActor->IsA(ARangedEnemy::StaticClass()))
-	{
+	//if (OtherActor->IsA(ARangedEnemy::StaticClass()))
+	//{
 
-		ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
-		RangedEnemy->RangedEnemyHealth -= 20;
+	//	ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
+	//	RangedEnemy->RangedEnemyHealth -= 20;
 
-		//Destroy();
-	}
+	//	//Destroy();
+	//}
 }
 

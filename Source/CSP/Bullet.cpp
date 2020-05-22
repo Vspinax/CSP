@@ -47,6 +47,8 @@ void ABullet::Tick(float DeltaTime)
 
 void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+
+    
     if (OtherActor->IsA(AEnemy::StaticClass()))
     {
         // Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
@@ -59,35 +61,17 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
         Destroy();
     }
 
-    if (OtherActor->IsA(ARangedEnemy::StaticClass()))
+    else if (OtherActor->IsA(ARangedEnemy::StaticClass()))
     {
-       
-        ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
+
+ /*       ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
         RangedEnemy->RangedEnemyHealth -= 2;
 
-        Destroy();
-    }if (OtherActor->IsA(AEnemy::StaticClass()))
-    {
-        // Alternetivt : Cast<AEnemy>(OtherActor)->Hit(); 
-        //Cast<AEnemy>(OtherActor)->Destroy();                  // Insta kill
-
-        AEnemy* Enemy = Cast<AEnemy>(OtherActor);
-        Enemy->EnemyHealth -= 2;
-
-        //Destroy Bullet:
-        Destroy();
+        Destroy();*/
     }
 
-    if (OtherActor->IsA(ARangedEnemy::StaticClass()))
-    {
 
-        ARangedEnemy* RangedEnemy = Cast<ARangedEnemy>(OtherActor);
-        RangedEnemy->RangedEnemyHealth -= 2;
-
-        Destroy();
-    }
-
-     if (OtherActor->IsA(AEnemyCharacter::StaticClass()))
+     else if (OtherActor->IsA(AEnemyCharacter::StaticClass()))
     {
      
     }
