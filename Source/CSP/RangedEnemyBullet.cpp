@@ -4,6 +4,8 @@
 #include "RangedEnemyBullet.h"
 #include "Components/SphereComponent.h"
 #include "MainCharacter.h"
+#include "EnemyCharacter.h"
+#include "RangedEnemy.h"
 
 // Sets default values
 ARangedEnemyBullet::ARangedEnemyBullet()
@@ -55,11 +57,22 @@ void ARangedEnemyBullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 		Destroy();
 	}
 
-	if (OtherActor->IsA(ARangedEnemyBullet::StaticClass()))
+	else if (OtherActor->IsA(ARangedEnemyBullet::StaticClass()))
 	{
 
 	}
-	else
+
+	else if (OtherActor->IsA(AEnemyCharacter::StaticClass()))
+	{
+
+	}
+
+	else if (OtherActor->IsA(ARangedEnemy::StaticClass()))
+	{
+
+	}
+
+	else //if (OtherActor != this)
 	{
 		Destroy();
 	}
