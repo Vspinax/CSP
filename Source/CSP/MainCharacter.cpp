@@ -5,7 +5,7 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "SpecialAttackBullet.h"
-
+#include "MainPlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
@@ -58,15 +58,19 @@ AMainCharacter::AMainCharacter()
 	IsShootingSpecialAttack = false;
 	SpecialAttackChargetime = 0.f;
 
+	bESCDown = false;
+
 }
 
-// Called when the game starts or when spawned
+// Called when the game starts or when spawned 
 void AMainCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
 	//Show system cursor. 
 	GetWorld()->GetFirstPlayerController()->bShowMouseCursor = true;
+
+	MainPlayerController = Cast<AMainPlayerController>(GetController());
 
 }
 
@@ -171,9 +175,12 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMainCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMainCharacter::MoveRight);
 
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMainCharacter::Jump);
 
 	PlayerInputComponent->BindAction("Refill", IE_Pressed, this, &AMainCharacter::Refill);
+
+	PlayerInputComponent->BindAction("ESC", IE_Pressed, this, &AMainCharacter::ESCDown);
+	PlayerInputComponent->BindAction("ESC", IE_Pressed, this, &AMainCharacter::ESCUp);
 
 	PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &AMainCharacter::StartShooting);
 	PlayerInputComponent->BindAction("Shoot", IE_Released, this, &AMainCharacter::StopShooting);
@@ -186,9 +193,19 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+bool AMainCharacter::CanMove(float Value)
+{
+	if (MainPlayerController) 
+	{
+		return((Controller != nullptr) && (Value != 0.0f)) &&
+		!MainPlayerController->bPauseMenuVisible;
+	}
+	return false;
+}
+
 void AMainCharacter::MoveForward(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
+	if (CanMove(Value))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
@@ -200,7 +217,7 @@ void AMainCharacter::MoveForward(float Value)
 
 void AMainCharacter::MoveRight(float Value)
 {
-	if ((Controller != nullptr) && (Value != 0.0f))
+	if (CanMove(Value))
 	{
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0.f, Rotation.Yaw, 0.f);
@@ -208,6 +225,12 @@ void AMainCharacter::MoveRight(float Value)
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, Value);
 	}
+}
+
+void AMainCharacter::Jump()
+{
+	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	Super::Jump();
 }
 
 void AMainCharacter::Shoot()
@@ -226,7 +249,9 @@ void AMainCharacter::Shoot()
 
 void AMainCharacter::StartShooting()
 {
+	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	IsShooting = true;
+
 }
 
 void AMainCharacter::StopShooting()
@@ -257,13 +282,29 @@ void AMainCharacter::SpecialAttack()
 
 void AMainCharacter::StartSpecialAttack()
 {
-
-		IsShootingSpecialAttack = true;
+	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	IsShootingSpecialAttack = true;
 }
 
 void AMainCharacter::Refill()
 {
+	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	Health = 5;
+}
+
+void AMainCharacter::ESCDown()
+{
+	bESCDown = true;
+
+	if (MainPlayerController)
+	{
+		MainPlayerController->TogglePauseMenu();
+	}
+}
+
+void AMainCharacter::ESCUp()
+{
+	bESCDown = false;
 }
 
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -284,6 +325,7 @@ void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 
 void AMainCharacter::StartDash()
 {
+	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	if (DashAvailable > DashCooldown)
 	{
 		DashTimer = 0;
@@ -294,6 +336,7 @@ void AMainCharacter::StartDash()
 
 void AMainCharacter::StopDash()
 {
+
 	GetCharacterMovement()->MaxAcceleration = 2048.f;
 	GetCharacterMovement()->MaxWalkSpeed = 600.f;
 	IsDashing = false;

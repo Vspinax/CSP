@@ -18,6 +18,9 @@ public:
 	// Sets default values for this character's properties
 	AMainCharacter();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category ="Controller")
+	class AMainPlayerController* MainPlayerController;
+
 	//Camera Boom positioning the camera behind the player
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class USpringArmComponent* CameraBoom;
@@ -56,6 +59,8 @@ public:
 	//called for both right and left
 	void MoveRight(float Value);
 
+	virtual void Jump() override;
+
 	void Shoot();
 
 	void StartShooting();
@@ -69,6 +74,16 @@ public:
 	void StartSpecialAttack();
 
 	void Refill();
+
+	// For Pause Menu
+
+	bool bESCDown;
+
+	void ESCDown();
+
+	void ESCUp();
+
+	bool CanMove(float Value);
 
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -136,6 +151,7 @@ private:
 
 	UFUNCTION()
 		void StopDash();
+
 
 
 };

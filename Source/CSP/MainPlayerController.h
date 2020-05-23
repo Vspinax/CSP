@@ -24,6 +24,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
 	UUserWidget* HUDOverlay;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	TSubclassOf<UUserWidget> WPauseMenu;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+	UUserWidget* PauseMenu;
+
+	bool bPauseMenuVisible;
+
+	UFUNCTION(BlueprintCallable)
+	void DisplayPauseMenu();
+
+	UFUNCTION(BlueprintCallable)
+	void RemovePauseMenu();
+
+	void TogglePauseMenu();
+
 protected:
 	virtual void BeginPlay() override;
 };
