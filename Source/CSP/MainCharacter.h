@@ -85,6 +85,10 @@ public:
 
 	bool CanMove(float Value);
 
+	//Game Over
+
+	void GameOver();
+
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }

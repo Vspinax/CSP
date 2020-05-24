@@ -14,6 +14,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/CapsuleComponent.h"
 
 
 
@@ -195,6 +196,8 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 bool AMainCharacter::CanMove(float Value)
 {
+	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return false;
+
 	if (MainPlayerController) 
 	{
 		return((Controller != nullptr) && (Value != 0.0f)) &&
@@ -230,6 +233,7 @@ void AMainCharacter::MoveRight(float Value)
 void AMainCharacter::Jump()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
 	Super::Jump();
 }
 
@@ -250,6 +254,8 @@ void AMainCharacter::Shoot()
 void AMainCharacter::StartShooting()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+
 	IsShooting = true;
 
 }
@@ -265,10 +271,8 @@ void AMainCharacter::TakeDamage()
 
 	if (Health <= 0)
 	{
-
-
-		UGameplayStatics::SetGamePaused(GetWorld(), true);
-
+		//UGameplayStatics::SetGamePaused(GetWorld(), true);
+		GameOver();
 	}
 }
 
@@ -283,12 +287,16 @@ void AMainCharacter::SpecialAttack()
 void AMainCharacter::StartSpecialAttack()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+
 	IsShootingSpecialAttack = true;
 }
 
 void AMainCharacter::Refill()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+
 	Health = 5;
 }
 
@@ -306,6 +314,17 @@ void AMainCharacter::ESCUp()
 {
 	bESCDown = false;
 }
+
+void AMainCharacter::GameOver()
+{
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	if (MainPlayerController)
+	{
+		MainPlayerController->ToggleGameOver();
+	}
+}
+
 
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -326,6 +345,8 @@ void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor*
 void AMainCharacter::StartDash()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+
 	if (DashAvailable > DashCooldown)
 	{
 		DashTimer = 0;

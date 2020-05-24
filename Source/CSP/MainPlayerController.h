@@ -16,6 +16,8 @@ class CSP_API AMainPlayerController : public APlayerController
 
 public:
 
+	//PAUSE MENU
+
 	//reference to the UMG Asset in the Editor
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
 	TSubclassOf<class UUserWidget> HUDOverlayAsset;
@@ -39,6 +41,25 @@ public:
 	void RemovePauseMenu();
 
 	void TogglePauseMenu();
+
+	//GAME OVER SCREEN
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+		TSubclassOf<UUserWidget> WGameOverScreen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+		UUserWidget* GameOverScreen;
+
+	bool bGameOverScreenVisible;
+
+	UFUNCTION(BlueprintCallable)
+		void DisplayGameOver();
+
+	UFUNCTION(BlueprintCallable)
+		void RemoveGameOver();
+
+	void ToggleGameOver();
 
 protected:
 	virtual void BeginPlay() override;

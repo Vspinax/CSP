@@ -28,6 +28,16 @@ void AMainPlayerController::BeginPlay()
 			PauseMenu->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+
+	if (WGameOverScreen)
+	{
+		GameOverScreen = CreateWidget<UUserWidget>(this, WGameOverScreen);
+		if (GameOverScreen)
+		{
+			GameOverScreen->AddToViewport();
+			GameOverScreen->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 		
 }
 void AMainPlayerController::DisplayPauseMenu()
@@ -58,4 +68,34 @@ void AMainPlayerController::TogglePauseMenu()
 	{
 		DisplayPauseMenu();
 	}
+}
+
+void AMainPlayerController::DisplayGameOver()
+{
+	if (GameOverScreen)
+	{
+		bGameOverScreenVisible = true;
+		GameOverScreen->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void AMainPlayerController::RemoveGameOver()
+{
+	if (GameOverScreen)
+	{
+		bGameOverScreenVisible = false;
+		GameOverScreen->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void AMainPlayerController::ToggleGameOver()
+{
+	//if (bGameOverScreenVisible)
+	//{
+	//	RemoveGameOver();
+	//}
+	//else
+	//{
+		DisplayGameOver();
+	//}
 }
