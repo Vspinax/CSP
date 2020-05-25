@@ -132,12 +132,12 @@ void AEnemyCharacter::MoveToTarget(AMainCharacter* MainCharacter)
 
 		//Get som explaining T_T for TArray
 		// FOR DEBUG
-		TArray<FNavPathPoint> PathPoints = NavPath->GetPathPoints();
-		for (auto Point : PathPoints) // give a point, which is a element in the arrays which is a PathPoint
-		{
-			FVector Location = Point.Location;
-			UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Red, 10.f, 1.5f);
-		}
+		//TArray<FNavPathPoint> PathPoints = NavPath->GetPathPoints();
+		//for (auto Point : PathPoints) // give a point, which is a element in the arrays which is a PathPoint
+		//{
+		//	FVector Location = Point.Location;
+		//	UKismetSystemLibrary::DrawDebugSphere(this, Location, 25.f, 8, FLinearColor::Red, 10.f, 1.5f);
+		//}
 	}
 }
 
