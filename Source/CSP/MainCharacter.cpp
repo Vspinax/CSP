@@ -15,7 +15,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/CapsuleComponent.h"
-
+#include "Components/SkeletalMeshComponent.h"
 
 
 // Sets default values
@@ -318,6 +318,7 @@ void AMainCharacter::ESCUp()
 void AMainCharacter::GameOver()
 {
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	SetActorHiddenInGame(true);
 
 	if (MainPlayerController)
 	{
