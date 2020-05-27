@@ -54,6 +54,7 @@ AMainCharacter::AMainCharacter()
 
 	MaxHealth = 5;
 	Health = 5;
+	DeathCounter = 0;
 
 	DashCooldown = 0.3f;
 	DashAvailable = 0.f;
@@ -302,6 +303,7 @@ void AMainCharacter::Refill()
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
 
 	Health = 5;
+	SpecialAttackChargetime = 10;
 }
 
 void AMainCharacter::ESCDown()
@@ -321,6 +323,8 @@ void AMainCharacter::ESCUp()
 
 void AMainCharacter::GameOver()
 {
+	DeathCounter++;
+
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetActorHiddenInGame(true);
 
