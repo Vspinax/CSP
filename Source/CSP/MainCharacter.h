@@ -127,6 +127,9 @@ public:
 	UPROPERTY()
 		bool IsDashing;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		int32 DeathCounter;
+
 private:
 
 	///** Max Movementspeed of the Character*/
