@@ -6,11 +6,14 @@
 #include "Enemy.h"
 #include "SpecialAttackBullet.h"
 #include "MainPlayerController.h"
+#include "CSPSaveGame.h"
+
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Engine/World.h"
 #include "Components/Decalcomponent.h"
 #include "Materials/Material.h"
+
 #include "UObject/ConstructorHelpers.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
@@ -104,7 +107,7 @@ void AMainCharacter::Tick(float DeltaTime)
 
 		///Set the new direction of the pawn:
 		FVector CursorLocation = Hit.Location;
-		UE_LOG(LogTemp, Warning, TEXT("Hit location %s!"), *Hit.Location.ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Hit location %s!"), *Hit.Location.ToString());
 		///Set Z to a little above ground
 		FVector TempLocation = FVector(CursorLocation.X, CursorLocation.Y, 30.f);
 
@@ -258,6 +261,7 @@ void AMainCharacter::StartShooting()
 
 	IsShooting = true;
 
+
 }
 
 void AMainCharacter::StopShooting()
@@ -324,6 +328,35 @@ void AMainCharacter::GameOver()
 	{
 		MainPlayerController->ToggleGameOver();
 	}
+}
+
+void AMainCharacter::SaveGame()
+{
+	UCSPSaveGame* SaveGameInstance = Cast<UCSPSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSPSaveGame::StaticClass()));
+
+	SaveGameInstance->CharacterStats.Location = GetActorLocation();
+
+	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->PlayerName, SaveGameInstance->UserIndex);
+}
+
+void AMainCharacter::LoadGame()
+{
+	UCSPSaveGame* LoadGameInstance = Cast<UCSPSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSPSaveGame::StaticClass()));
+	
+	LoadGameInstance = Cast<UCSPSaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->PlayerName, LoadGameInstance->UserIndex));
+
+	SetActorLocation(LoadGameInstance->CharacterStats.Location);
+
+	Health = 5;
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	SetActorHiddenInGame(false);
+
+	if (MainPlayerController)
+	{
+		MainPlayerController->ToggleGameOver();
+	}
+
 }
 
 

@@ -90,12 +90,12 @@ void AMainPlayerController::RemoveGameOver()
 
 void AMainPlayerController::ToggleGameOver()
 {
-	//if (bGameOverScreenVisible)
-	//{
-	//	RemoveGameOver();
-	//}
-	//else
-	//{
+	if (bGameOverScreenVisible)
+	{
+		RemoveGameOver();
+	}
+	else
+	{
 		DisplayGameOver();
-	//}
+	}
 }
