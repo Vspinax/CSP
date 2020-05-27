@@ -62,7 +62,7 @@ public:
 private:
 
 	UPROPERTY(EditAnywhere)
-		float TurnDelayMax = 0.5f;
+		float TurnDelayMax = 0.f;
 
 	UPROPERTY(EditAnywhere)
 		float TurnDelayMin = 0.f;

@@ -61,7 +61,7 @@ void ARangedEnemy::Tick(float DeltaTime)
 
 	if (InRange)
 	{
-		if (ShootAvailable > 1.5f)
+		if (ShootAvailable > ReloadTime)
 		{
 			Shoot();
 			ShootAvailable = 0;
