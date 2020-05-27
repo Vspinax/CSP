@@ -61,6 +61,25 @@ public:
 
 	void ToggleGameOver();
 
+	//Win Screen
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+		TSubclassOf<UUserWidget> WWinScreen;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget")
+		UUserWidget* WinScreen;
+
+	bool bWinScreenVisible;
+
+	UFUNCTION(BlueprintCallable)
+		void DisplayWin();
+
+	UFUNCTION(BlueprintCallable)
+		void RemoveWin();
+
+	void ToggleWinScreen();
+
+
 protected:
 	virtual void BeginPlay() override;
 };

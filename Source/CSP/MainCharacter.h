@@ -89,6 +89,8 @@ public:
 
 	void GameOver();
 
+	void Win();
+
 	//  SAVE/LOAD
 
 	UFUNCTION(BlueprintCallable)
@@ -96,6 +98,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void LoadGame();
+
+	void SwitchLevel(FName LevelName);
 
 
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
@@ -129,6 +133,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 		int32 DeathCounter;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+		float BossKill;
 
 private:
 

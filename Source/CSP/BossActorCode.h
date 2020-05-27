@@ -4,19 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/ShapeComponent.h"
-#include "RangedEnemy.generated.h"
-
-class ARangedEnemyBullet;
+#include "BossActorCode.generated.h"
 
 UCLASS()
-class CSP_API ARangedEnemy : public AActor
+class CSP_API ABossActorCode : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ARangedEnemy();
+	ABossActorCode();
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,13 +29,13 @@ public:
 	FVector EnemyRotation = FVector(1.0f, 0.f, 0.f);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		float RangedEnemyHealth;
+		float BossHealth;
 
 	UFUNCTION()
 		void Shoot();
 
 	UPROPERTY(EditAnywhere, Category = "Pawn Setup")
-		TSubclassOf<ARangedEnemyBullet> BulletBlueprint;
+		TSubclassOf<class ARangedEnemyBullet> BulletBlueprint;
 
 	UPROPERTY(EditAnywhere)
 		float ReloadTime;
@@ -48,7 +45,7 @@ public:
 
 	UFUNCTION()
 		virtual void BoxOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	
+
 	UFUNCTION()
 		virtual void AgroSphereOnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
@@ -70,7 +67,7 @@ private:
 	float CurrentTurnDelay = 0.f;
 
 	UPROPERTY(EditAnywhere)
-		UShapeComponent* RangedEnemyRoot = nullptr;
+	class	UShapeComponent* BossRoot = nullptr;
 
 	UPROPERTY(EditAnywhere)
 		UStaticMeshComponent* MeshComponent;

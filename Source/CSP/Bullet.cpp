@@ -7,6 +7,7 @@
 #include "EnemyCharacter.h"
 #include "RangedEnemy.h"
 #include "Components/SphereComponent.h"
+#include "BossActorCode.h"
 
 // Sets default values
 ABullet::ABullet()
@@ -74,6 +75,11 @@ void ABullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherA
      else if (OtherActor->IsA(AEnemyCharacter::StaticClass()))
     {
      
+    }
+
+     else if (OtherActor->IsA(ABossActorCode::StaticClass()))
+    {
+
     }
 
     else if (OtherActor != this)

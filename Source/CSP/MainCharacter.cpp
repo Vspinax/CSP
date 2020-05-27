@@ -55,6 +55,7 @@ AMainCharacter::AMainCharacter()
 	MaxHealth = 5;
 	Health = 5;
 	DeathCounter = 0;
+	BossKill = 0;
 
 	DashCooldown = 0.3f;
 	DashAvailable = 0.f;
@@ -84,6 +85,10 @@ void AMainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//if (BossKill >= 1)
+	//{
+	//	Win();
+	//}
 
 	DashAvailable += DeltaTime;
 	DashTimer += DeltaTime;
@@ -201,6 +206,7 @@ void AMainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 bool AMainCharacter::CanMove(float Value)
 {
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return false;
+	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return false;
 
 	if (MainPlayerController) 
 	{
@@ -238,6 +244,7 @@ void AMainCharacter::Jump()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
 	Super::Jump();
 }
 
@@ -259,6 +266,7 @@ void AMainCharacter::StartShooting()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
 
 	IsShooting = true;
 
@@ -293,6 +301,7 @@ void AMainCharacter::StartSpecialAttack()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
 
 	IsShootingSpecialAttack = true;
 }
@@ -301,6 +310,7 @@ void AMainCharacter::Refill()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
 
 	Health = 5;
 	SpecialAttackChargetime = 10;
@@ -334,6 +344,30 @@ void AMainCharacter::GameOver()
 	}
 }
 
+void AMainCharacter::Win()
+{
+	//GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	//if (MainPlayerController)
+	//{
+	//	MainPlayerController->ToggleWinScreen();
+	//}
+}
+
+void AMainCharacter::SwitchLevel(FName LevelName)
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		FString CurrentWorld = World->GetMapName();
+		FName CurrentWorldName(*CurrentWorld);
+		if (CurrentWorldName != LevelName)
+		{
+			UGameplayStatics::OpenLevel(World, LevelName);
+		}
+	}
+}
+
 void AMainCharacter::SaveGame()
 {
 	UCSPSaveGame* SaveGameInstance = Cast<UCSPSaveGame>(UGameplayStatics::CreateSaveGameObject(UCSPSaveGame::StaticClass()));
@@ -364,6 +398,8 @@ void AMainCharacter::LoadGame()
 }
 
 
+
+
 void AMainCharacter::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//if (OtherActor->IsA(AEnemy::StaticClass()))
@@ -384,6 +420,7 @@ void AMainCharacter::StartDash()
 {
 	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
 	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
 
 	if (DashAvailable > DashCooldown)
 	{

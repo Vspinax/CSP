@@ -38,6 +38,16 @@ void AMainPlayerController::BeginPlay()
 			GameOverScreen->SetVisibility(ESlateVisibility::Hidden);
 		}
 	}
+
+	if (WWinScreen)
+	{
+		WinScreen = CreateWidget<UUserWidget>(this, WWinScreen);
+		if (WinScreen)
+		{
+			WinScreen->AddToViewport();
+			WinScreen->SetVisibility(ESlateVisibility::Hidden);
+		}
+	}
 		
 }
 void AMainPlayerController::DisplayPauseMenu()
@@ -97,5 +107,36 @@ void AMainPlayerController::ToggleGameOver()
 	else
 	{
 		DisplayGameOver();
+	}
+}
+
+void AMainPlayerController::DisplayWin()
+{
+	if (WinScreen)
+	{
+		bWinScreenVisible = true;
+		WinScreen->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void AMainPlayerController::RemoveWin()
+{
+	if (WinScreen)
+	{
+		bWinScreenVisible = false;
+		WinScreen->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void AMainPlayerController::ToggleWinScreen()
+{
+	if (bWinScreenVisible)
+	{
+		RemoveWin();
+	}
+	else
+	{
+		DisplayWin();
+	
 	}
 }

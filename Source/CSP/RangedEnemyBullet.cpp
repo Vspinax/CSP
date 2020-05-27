@@ -6,6 +6,7 @@
 #include "MainCharacter.h"
 #include "EnemyCharacter.h"
 #include "RangedEnemy.h"
+#include "BossActorCode.h"
 
 // Sets default values
 ARangedEnemyBullet::ARangedEnemyBullet()
@@ -68,6 +69,11 @@ void ARangedEnemyBullet::OnOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	}
 
 	else if (OtherActor->IsA(ARangedEnemy::StaticClass()))
+	{
+
+	}
+
+	else if (OtherActor->IsA(ABossActorCode::StaticClass()))
 	{
 
 	}
