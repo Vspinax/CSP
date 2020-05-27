@@ -308,12 +308,14 @@ void AMainCharacter::StartSpecialAttack()
 
 void AMainCharacter::Refill()
 {
-	if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
-	if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
-	if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
+	//Cheats
 
-	Health = 5;
-	SpecialAttackChargetime = 10;
+	//if (MainPlayerController) if (MainPlayerController->bPauseMenuVisible) return;
+	//if (MainPlayerController) if (MainPlayerController->bGameOverScreenVisible) return;
+	//if (MainPlayerController) if (MainPlayerController->bWinScreenVisible) return;
+
+	//Health = 5;
+	//SpecialAttackChargetime = 10;
 }
 
 void AMainCharacter::ESCDown()
