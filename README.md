@@ -1,13 +1,15 @@
 # CSP
  unreal game
 
-We recommend to use the Vinh_TestMap for best testing.
-you need a large surface to test the cursor movement.
-
 WASD for Movement
 
 left click for shoot
-right click for sword
 
 left shift for dash
 
+E for special attack
+
+P or ESC for pause
+
+There is an issue with the visual studio where you cant start the project sometimes due to compiling errors. you just have to try again until it works. its an unknown error that just occours sometimes when compiling.
+it may takes a few tries before the project opens properly 
